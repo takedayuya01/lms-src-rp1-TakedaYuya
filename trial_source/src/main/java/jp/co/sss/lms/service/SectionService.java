@@ -86,6 +86,7 @@ public class SectionService {
 					loginUserDto.getUserId().toString());
 			fileDto.setFileId(hashFileId);
 		}
+		
 		sectionServiceSectionDto.setMaxFileSize(Constants.DELIVERABLES_UPLOAD_MAX_SIZE);
 	}
 

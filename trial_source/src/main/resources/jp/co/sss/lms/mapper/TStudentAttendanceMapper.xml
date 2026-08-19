@@ -102,7 +102,7 @@
 		AND t_student_attendance.status != 1
 		AND (
 		t_student_attendance.training_start_time IS NULL 
-		OR t_student_attendance.training_end_time IS NULL
+		OR t_student_attendance.training_start_time = ''
 		OR t_student_attendance.training_end_time IS NULL
 		OR t_student_attendance.training_end_time = ''		
 		)

@@ -4,11 +4,14 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.BindingResult;
 
 import jp.co.sss.lms.dto.AttendanceManagementDto;
 import jp.co.sss.lms.dto.LoginUserDto;
@@ -254,8 +257,32 @@ public class StudentAttendanceService {
 
 			attendanceForm.getAttendanceList().add(dailyAttendanceForm);
 		}
+		Map<Integer, String> hourMap = new LinkedHashMap<>();
+		hourMap.put(null, "");
+		int i = 0;
+		for (i = 0; i < 12; i++) {
+			hourMap.put(i, String.format("%02d",i));
+
+		}
+		
+		Map<Integer, String> minuteMap = new LinkedHashMap<>();
+		hourMap.put(null, "");
+		
+		for (i = 0; i < 59; i++) {
+			minuteMap.put(i, String.format("%02d",i));
+			
+
+		}
+		//DailyAttendanceForm dailyForm=new DailyAttendanceForm();
+		//BeanUtils.copyProperties(attendanceManagementDtoList, dailyForm);
+		
+		
+		
+	
+		
 
 		return attendanceForm;
+
 	}
 
 	/**
@@ -335,17 +362,22 @@ public class StudentAttendanceService {
 		return messageUtil.getMessage(Constants.PROP_KEY_ATTENDANCE_UPDATE_NOTICE);
 	}
 
+	/**
+	 * @author Yuya takeda
+	 * @return count > 0
+	 */
 	public Boolean notEnterCheck() {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 		Date now = new Date();
 		// 一度 String に変換してから Parse して時刻を切り捨てる
-		Date  trainingDate= null;
+		Date trainingDate = null;
 		try {
 			trainingDate = sdf.parse(sdf.format(now));
 		} catch (ParseException e) {
 			// TODO 自動生成された catch ブロック
 			e.printStackTrace();
 		}
+
 		int count = tStudentAttendanceMapper.notEnterCount(loginUserDto.getLmsUserId(),
 				Constants.DB_FLG_FALSE, // ショート型定数、あるいは (short) 0 など
 				trainingDate
@@ -353,8 +385,22 @@ public class StudentAttendanceService {
 		);
 
 		return count > 0;
-
 	}
 
-	
+	public void formatConversion(AttendanceForm attendanceForm, BindingResult result) {
+		List<DailyAttendanceForm> attendanceList = attendanceForm.getAttendanceList();
+		for (DailyAttendanceForm form : attendanceList) {
+			if (form.getTrainingStartTime() != null) {
+				String Starttime = String.format("%02b:%02b", form.getTrainingStartTime());
+				form.setTrainingStartTime(Starttime);
+			}
+			if (form.getTrainingEndTime() != null) {
+				String EndTime = String.format("%02b:%02b", form.getTrainingEndTime());
+				form.setTrainingEndTime(EndTime);
+
+			}
+
+		}
+	}
+
 }
