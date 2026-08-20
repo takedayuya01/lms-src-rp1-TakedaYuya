@@ -87,6 +87,60 @@ public class AttendanceUtil {
 	}
 
 	/**
+	 * 1時間刻みの時間(数値)マップを生成
+	 * 
+	 * @return 時間マップ (0〜23)
+	 */
+	public LinkedHashMap<Integer, String> getHourMap() {
+		LinkedHashMap<Integer, String> hourMap = new LinkedHashMap<>();
+		hourMap.put(null, "");
+		for (int i = 0; i < 24; i++) {
+			hourMap.put(i, String.format("%02d", i));
+		}
+		return hourMap;
+	}
+
+	/**
+	 * 1分刻みの分(数値)マップを生成
+	 * 
+	 * @return 分マップ (0〜59)
+	 */
+	public LinkedHashMap<Integer, String> getMinuteMap() {
+		LinkedHashMap<Integer, String> minuteMap = new LinkedHashMap<>();
+		minuteMap.put(null, "");
+		for (int i = 0; i < 60; i++) {
+			minuteMap.put(i, String.format("%02d", i));
+		}
+		return minuteMap;
+	}
+
+	/**
+	 * 時間(時)の切り出し ("09:15" -> 9)
+	 * 
+	 * @param timeStr 開始時刻or終了時刻 (例: "09:15")
+	 * @return 出退勤時間(時間)
+	 */
+	public Integer getHour(String timeStr) {
+		if (timeStr == null || timeStr.isEmpty() || !timeStr.contains(":")) {
+			return null;
+		}
+		return Integer.parseInt(timeStr.substring(0, 2));
+	}
+
+	/**
+	 * 時間(分)の切り出し ("09:15" -> 15)
+	 * 
+	 * @param timeStr 開始時刻or終了時刻 (例: "09:15")
+	 * @return 出退勤時間(分)
+	 */
+	public Integer getMinute(String timeStr) {
+		if (timeStr == null || timeStr.isEmpty() || !timeStr.contains(":")) {
+			return null;
+		}
+		return Integer.parseInt(timeStr.substring(3, 5));
+	}
+
+	/**
 	 * 時刻分を丸めた本日日付を取得
 	 * 
 	 * @return "yyyy/M/d"形式の日付
